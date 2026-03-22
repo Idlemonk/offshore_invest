@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offshore Investment - {% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'accounts:homepage' %}" class="logo">Offshore Investment</a>
+        <div class="nav-links">
+            <a href="{% url 'accounts:homepage' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="#">Dashboard</a>
+                <a href="#">Portfolio</a>
+                <a href="{% url 'accounts:logout' %}">Logout ({{ user.username }})</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}">Login</a>
+                <a href="{% url 'accounts:signup' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Offshore Investment. All rights reserved.</p>
+        <p>Invest in Bitcoin, Gold, Stocks and more!</p>
+    </footer>
+</body>
+</html>

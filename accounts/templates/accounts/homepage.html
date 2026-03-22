@@ -1,0 +1,39 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Invest in Your Future</h1>
+    <p>Bitcoin • Gold • Stocks • Bonds • Crypto</p>
+    {% if not user.is_authenticated %}
+        <div>
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Get Started</a>
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Login</a>
+        </div>
+    {% else %}
+        <div>
+            <a href="#" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="card-grid">
+    <div class="card">
+        <h3>Bitcoin & Crypto</h3>
+        <p>Invest in the world's leading cryptocurrencies including BTC, ETH, XRP, and more.</p>
+    </div>
+    <div class="card">
+        <h3>Gold</h3>
+        <p>The timeless store of value. Invest in physical gold backed investments.</p>
+    </div>
+    <div class="card">
+        <h3>Stocks</h3>
+        <p>Own pieces of the world's biggest companies like Apple, BlackRock, and Meta.</p>
+    </div>
+    <div class="card">
+        <h3>Bonds</h3>
+        <p>Stable, fixed-income investments for the conservative part of your portfolio.</p>
+    </div>
+</div>
+{% endblock %}

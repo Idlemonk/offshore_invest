@@ -54,3 +54,18 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You have been successfully logged out.")
     return redirect('accounts:homepage')
+
+#Handles deposit with KYC reminder
+def process_deposit(request):
+    """ Process a deposit and send KYC reminder email
+        This would be called ag=fter a successful deposit
+    """
+    #Deposit processing logic...
+
+    #After successful deposit, check if user needs KYC
+    if not request.user.kyc or request.user.kyc.status != "VERIFIED":
+        send_kyc_reminder_email(request.user)
+        messages.info(request, "Your deposut has been received Complete KYc to have unlimited access to your funds. ")
+
+    return redirect('accounts:deposit_success')
+

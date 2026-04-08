@@ -1,39 +1,561 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}Welcome to Offshore Investment{% endblock %}
 
 {% block content %}
+<!-- Particles Background Container -->
+<div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;"></div>
+
+<!-- Live Price Ticker -->
+<div class="ticker-container">
+    <div class="ticker">
+        <div class="ticker-item">
+            <i class="fab fa-bitcoin"></i> Bitcoin: $67,234 
+            <span class="positive">▲ +2.4%</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fas fa-coins"></i> Ethereum: $3,456 
+            <span class="positive">▲ +3.1%</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fas fa-chart-line"></i> Gold: $2,345 
+            <span class="negative">▼ -0.3%</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fab fa-apple"></i> Apple: $178 
+            <span class="positive">▲ +1.2%</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fas fa-building"></i> BlackRock: $892 
+            <span class="negative">▼ -0.5%</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fas fa-chart-simple"></i> XRP: $0.89 
+            <span class="positive">▲ +5.2%</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fas fa-chart-line"></i> TRX: $0.12 
+            <span class="positive">▲ +1.8%</span>
+        </div>
+    </div>
+</div>
+
 <div class="hero">
     <h1>Invest in Your Future</h1>
-    <p>Bitcoin • Gold • Stocks • Bonds • Crypto</p>
+    <p class="hero-subtitle">Bitcoin • Gold • Stocks • Bonds • Crypto</p>
+    
     {% if not user.is_authenticated %}
-        <div>
-            <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Get Started</a>
-            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Login</a>
+        <div class="hero-buttons">
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary" id="signupBtn">
+                <i class="fas fa-user-plus"></i> Get Started
+            </a>
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
         </div>
     {% else %}
-        <div>
-            <a href="#" class="btn btn-primary">Go to Dashboard</a>
+        <div class="hero-buttons">
+            <a href="#" class="btn btn-primary" onclick="showComingSoon('dashboard')">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="#" class="btn btn-secondary" onclick="showComingSoon('portfolio')">
+                <i class="fas fa-chart-pie"></i> Portfolio
+            </a>
         </div>
     {% endif %}
 </div>
 
-<div class="card-grid">
-    <div class="card">
-        <h3>Bitcoin & Crypto</h3>
-        <p>Invest in the world's leading cryptocurrencies including BTC, ETH, XRP, and more.</p>
+<div class="stats-section">
+    <div class="stat-card">
+        <div class="stat-number" data-target="50000">0</div>
+        <div class="stat-label">Active Investors</div>
     </div>
-    <div class="card">
-        <h3>Gold</h3>
-        <p>The timeless store of value. Invest in physical gold backed investments.</p>
+    <div class="stat-card">
+        <div class="stat-number" data-target="250000000">0</div>
+        <div class="stat-label">Total Invested ($)</div>
     </div>
-    <div class="card">
-        <h3>Stocks</h3>
-        <p>Own pieces of the world's biggest companies like Apple, BlackRock, and Meta.</p>
-    </div>
-    <div class="card">
-        <h3>Bonds</h3>
-        <p>Stable, fixed-income investments for the conservative part of your portfolio.</p>
+    <div class="stat-card">
+        <div class="stat-number" data-target="156">0</div>
+        <div class="stat-label">Countries Served</div>
     </div>
 </div>
+
+<div class="card-grid">
+    <div class="card" data-aos="fade-up">
+        <div class="card-icon">
+            <i class="fab fa-bitcoin"></i>
+        </div>
+        <h3>Bitcoin & Crypto</h3>
+        <p>Invest in the world's leading cryptocurrencies including BTC, ETH, XRP, TRX, and more.</p>
+        <div class="card-footer">
+            <span class="badge">Popular</span>
+            <a href="#" onclick="showComingSoon('crypto')">Learn More →</a>
+        </div>
+    </div>
+    
+    <div class="card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-icon">
+            <i class="fas fa-coins"></i>
+        </div>
+        <h3>Gold</h3>
+        <p>The timeless store of value. Invest in physical gold backed investments with 100% reserve.</p>
+        <div class="card-footer">
+            <span class="badge">Safe Haven</span>
+            <a href="#" onclick="showComingSoon('gold')">Learn More →</a>
+        </div>
+    </div>
+    
+    <div class="card" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Stocks</h3>
+        <p>Own pieces of the world's biggest companies like Apple, BlackRock, Meta, and Amazon.</p>
+        <div class="card-footer">
+            <span class="badge">Equity</span>
+            <a href="#" onclick="showComingSoon('stocks')">Learn More →</a>
+        </div>
+    </div>
+    
+    <div class="card" data-aos="fade-up" data-aos-delay="300">
+        <div class="card-icon">
+            <i class="fas fa-chart-simple"></i>
+        </div>
+        <h3>Bonds</h3>
+        <p>Stable, fixed-income investments for the conservative part of your portfolio.</p>
+        <div class="card-footer">
+            <span class="badge">Fixed Income</span>
+            <a href="#" onclick="showComingSoon('bonds')">Learn More →</a>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Start Your Investment Journey?</h2>
+        <p>Join thousands of investors who trust us with their financial future</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-large" id="ctaSignupBtn">
+                <i class="fas fa-rocket"></i> Create Your Account
+            </a>
+        {% else %}
+            <a href="#" class="btn btn-primary btn-large" onclick="showComingSoon('invest')">
+                <i class="fas fa-chart-line"></i> Start Investing
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Chart Container (Hidden until dashboard phase) -->
+<div id="chart-container" style="display: none;">
+    <canvas id="portfolioChart"></canvas>
+</div>
+
+<style>
+/* Additional styles for enhanced homepage */
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Ticker Styles */
+.ticker-container {
+    background: var(--bg-secondary);
+    padding: 0.75rem;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1;
+}
+
+.ticker {
+    display: flex;
+    animation: scroll 25s linear infinite;
+    white-space: nowrap;
+}
+
+.ticker:hover {
+    animation-play-state: paused;
+}
+
+.ticker-item {
+    margin-right: 2.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.ticker-item i {
+    margin-right: 0.5rem;
+}
+
+.positive {
+    color: #10b981;
+}
+
+.negative {
+    color: #ef4444;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 3rem auto;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-primary);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+/* Card Enhancements */
+.card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-primary);
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.badge {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--accent-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+}
+
+.card-footer a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+    border-radius: 1rem;
+    padding: 3rem;
+    text-align: center;
+    margin: 4rem 0;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-content h2 {
+    margin-bottom: 1rem;
+}
+
+.cta-content p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Loading Spinner for buttons */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-section {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .cta-section {
+        padding: 2rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* AOS animation (fade up) */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+[data-aos="fade-up"] {
+    animation: fadeUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.card {
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://kit.fontawesome.com/a2e8d0339c.js" crossorigin="anonymous"></script>
+
+<script>
+// Particles.js Configuration
+particlesJS('particles-js', {
+    particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#3b82f6' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#3b82f6', opacity: 0.2, width: 1 },
+        move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
+    },
+    interactivity: {
+        detect_on: 'canvas',
+        events: {
+            onhover: { enable: true, mode: 'repulse' },
+            onclick: { enable: true, mode: 'push' }
+        }
+    },
+    retina_detect: true
+});
+
+// Animated Counter for Stats
+function animateCounter(element, target) {
+    let current = 0;
+    const increment = target / 50;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target.toLocaleString();
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current).toLocaleString();
+        }
+    }, 40);
+}
+
+// Start counters when they come into view
+const observerOptions = { threshold: 0.5 };
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const element = entry.target;
+            const target = parseInt(element.dataset.target);
+            animateCounter(element, target);
+            observer.unobserve(element);
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.stat-number').forEach(stat => {
+    observer.observe(stat);
+});
+
+// Coming Soon Function for non-working buttons
+function showComingSoon(feature) {
+    // Create toast notification
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
+        <i class="fas fa-clock"></i>
+        <span>${feature.charAt(0).toUpperCase() + feature.slice(1)} feature is coming soon in Phase ${getPhaseNumber(feature)}!</span>
+    `;
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+function getPhaseNumber(feature) {
+    const phases = {
+        'dashboard': '4',
+        'portfolio': '4',
+        'crypto': '3',
+        'gold': '3',
+        'stocks': '3',
+        'bonds': '3',
+        'invest': '3'
+    };
+    return phases[feature] || '3';
+}
+
+// Add loading state to buttons when clicked
+document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        if (this.getAttribute('onclick') && this.getAttribute('onclick').includes('showComingSoon')) {
+            // Don't add loading for coming soon buttons
+            return;
+        }
+        if (this.href && !this.href.includes('#')) {
+            this.classList.add('btn-loading');
+        }
+    });
+});
+
+// Toast notification styles
+const toastStyle = document.createElement('style');
+toastStyle.textContent = `
+    .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--bg-card);
+        border-left: 4px solid var(--accent-primary);
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-primary);
+        z-index: 9999;
+        animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-out 2.7s forwards;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+    
+    .toast-notification i {
+        color: var(--accent-primary);
+        font-size: 1.2rem;
+    }
+`;
+document.head.appendChild(toastStyle);
+</script>
+
+<!-- Chart initialization (for future dashboard phase) -->
+<script>
+// This will be activated in Phase 4 when dashboard is built
+// For now, just a placeholder
+console.log('Homepage enhanced with animations, particles, and interactive elements');
+</script>
 {% endblock %}

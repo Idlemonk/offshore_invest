@@ -1,0 +1,107 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}KYC Verification Status{% endblock %}
+
+{% block content %}
+<div class="kyc-status-container">
+    <h1>KYC Verification Status</h1>
+
+    <div class="status-card status-{{ kyc.status|lower }}">
+        <div class="status-icon">
+            {% if kyc.status == 'VERIFIED' %}✅{% endif %}
+            {% if kyc.status == 'PENDING' %}⏳{% endif %}
+            {% if kyc.status == 'REJECTED' %}❌{% endif %}
+            {% if kyc.status == 'NOT_STARTED' %}📝{% endif %}
+            {% if kyc.status == 'EXPIRED' %}⚠️{% endif %}
+        </div>
+        <div class="status-text">
+            <h2>{{ kyc.get_status_display }}</h2>
+            {% if kyc.status == 'PENDING' %}
+                <p>Your documents are being reviewed. You'll hear from us within 48 business hours.</p>
+                <p>Submitted on: {{ kyc.submitted_at|date:"F j, Y, g:i a" }}</p>
+            {% elif kyc.status == 'VERIFIED' %}
+                <p>You are fully verified! You can now invest and withdraw.</p>
+                <p>Verified on: {{ kyc.verified_at|date:"F j, Y, g:i a" }}</p>
+                <p>Verification expires: {{ kyc.expires_at|date:"F j, Y" }}</p>
+            {% elif kyc.status == 'REJECTED' %}
+                <p>Your verification was rejected. Please review the reasons below and try again.</p>
+                <a href="{% url 'accounts:kyc_retry' %}" class="btn btn-primary">Try Again</a>
+            {% elif kyc.status == 'NOT_STARTED' %}
+                <p>You haven't started KYC verification yet.</p>
+                <a href="{% url 'accounts:kyc_wizard' %}" class="btn btn-primary">Start Verification</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if documents %}
+    <div class="documents-section">
+        <h3>Your Documents</h3>
+        <div class="documents-grid">
+            {% for doc in documents %}
+            <div class="document-card status-{{ doc.status|lower }}">
+                <div class="doc-type">{{ doc.get_document_type_display }}</div>
+                <div class="doc-status">{{ doc.get_status_display }}</div>
+                <div class="doc-date">Uploaded: {{ doc.uploaded_at|date:"F j, Y" }}</div>
+                {% if doc.rejection_reason %}
+                    <div class="rejection-reason">
+                        Reason: {{ doc.get_rejection_reason_display }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if failed_attempts %}
+    <div class="failed-attempts">
+        <h3>Previous Failed Attempts</h3>
+        {% for attempt in failed_attempts %}
+        <div class="failed-card">
+            <strong>{{ attempt.get_document_type_display }}</strong> - {{ attempt.failure_reason }}
+            <small>{{ attempt.attempted_at|date:"F j, Y, g:i a" }}</small>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .kyc-status-container {
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+    .status-card {
+        background: var(--bg-card);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        border-left: 4px solid;
+    }
+    .status-verified { border-left-color: #10b981; }
+    .status-pending { border-left-color: #f59e0b; }
+    .status-rejected { border-left-color: #ef4444; }
+    .status-not_started { border-left-color: #3b82f6; }
+    .status-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .document-card {
+        background: var(--bg-secondary);
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+    .failed-card {
+        background: rgba(239, 68, 68, 0.1);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+{% endblock %}

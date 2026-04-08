@@ -140,3 +140,7 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:homepage'
 LOGOUT_REDIRECT_URL = 'accounts:homepage'
 
+SITE_URL = 'http://127.0.0.1:8000'  # For development
+#Whenever i go live, i have to change SITE_URL = 'https://www.offshoreinvestment.com'
+DEFAULT_FROM_EMAIL = 'noreply@offshoreinvestment.com' #Company email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development, emails print to console

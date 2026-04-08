@@ -24,6 +24,9 @@ class UserMetadata(models.Model):
     two_factor_enabled = models.BooleanField(default=False)
     last_login_ip = models.GenericIPAddressField(null=True, blank=True)
     last_login_device = models.CharField(max_length=200, blank=True)
+
+    # Activity tracking (for inactive account detection)
+    last_activity = models.DateTimeField(auto_now = True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -37,5 +40,8 @@ class UserMetadata(models.Model):
 # Signal to create metadata when user is created
 @receiver(post_save, sender=User)
 def create_user_metadata(sender, instance, created, **kwargs):
+    """Create metadata automatically when a new user is created"""
     if created:
         UserMetadata.objects.create(user=instance)
+
+

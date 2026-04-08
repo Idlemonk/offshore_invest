@@ -1,0 +1,116 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+<div class="kyc-admin-dashboard">
+    <h1>KYC Verification Dashboard</h1>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Pending</h3>
+            <div class="stat-number">{{ total_pending }}</div>
+        </div>
+        <div class="stat-card overdue">
+            <h3>Overdue (>48 hours)</h3>
+            <div class="stat-number">{{ overdue_count }}</div>
+        </div>
+    </div>
+
+    <div class="pending-list">
+        <h2>Pending Verifications</h2>
+        
+        {% for item in pending_list %}
+        <div class="verification-card {% if item.is_overdue %}overdue{% endif %}">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <strong>{{ item.user.username }}</strong>
+                    <span>{{ item.user.email }}</span>
+                    <span>Submitted: {{ item.kyc.submitted_at|date:"M j, Y" }}</span>
+                    <span>Pending: {{ item.hours_pending }} hours</span>
+                </div>
+            </div>
+            
+            <div class="documents-preview">
+                {% for doc in item.documents %}
+                <div class="doc-thumbnail">
+                    <div class="doc-type">{{ doc.get_document_type_display }}</div>
+                    <div class="doc-status {{ doc.status|lower }}">{{ doc.get_status_display }}</div>
+                    <a href="{{ doc.file.url }}" target="_blank" class="btn-view">View</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="actions">
+                <a href="{% url 'accounts:kyc_review' item.kyc.id %}" class="button review-btn">Review</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No pending verifications.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        flex: 1;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    .verification-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .verification-card.overdue {
+        border-left: 4px solid #ef4444;
+    }
+    .user-info {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        min-width: 250px;
+    }
+    .user-details {
+        display: flex;
+        flex-direction: column;
+    }
+    .documents-preview {
+        display: flex;
+        gap: 1rem;
+    }
+    .doc-thumbnail {
+        text-align: center;
+    }
+    .btn-view {
+        background: #3b82f6;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+    .review-btn {
+        background: #10b981;
+        color: white;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock %}

@@ -1,17 +1,29 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from accounts.views import auth_views as views
+from accounts.views import (
+    homepage, signup, login_view, logout_view,
+    kyc_wizard, kyc_status, kyc_retry
+)
+#from accounts import admin_tools
 
 app_name = 'accounts'
 
 urlpatterns = [
     # Homepage
-    path('', views.homepage, name='homepage'),
+    path('', homepage, name='homepage'),
+    # KYC URLS
+    path('kyc/wizard/', kyc_wizard, name='kyc_wizard'),
+    path('kyc/status/', kyc_status, name = 'kyc_status'),
+    path('kyc/retry/',  kyc_retry, name='kyc_retry'),
     
     # Authentication
-    path('signup/', views.signup, name='signup'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    path('signup/', signup, name='signup'),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+
+    #Admin KYC URLs (superuser only)
+    #path('admin/kyc/dashboard/', admin_tools.kyc_dashboard, name='kyc_dashboard'),
+    #path('admin/kyc/review/<int:kyc_id>/', admin_tools.kyc_review, name = "kyc_review"),
     
     # Password Reset
     path('password-reset/',
@@ -36,4 +48,9 @@ urlpatterns = [
              template_name='accounts/password_reset_complete.html'
          ),
          name='password_reset_complete'),
-]
+         ]
+
+    
+
+    
+

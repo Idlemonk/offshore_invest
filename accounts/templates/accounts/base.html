@@ -1,24 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" color-mode="{% if request.dark_mode %}dark{% else %}light{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offshore Investment - {% block title %}{% endblock %}</title>
     {% load static %}
+    
+    <!-- MAIN CSS FILE - THIS WAS MISSING! -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Particles.js and Chart.js CDN (moved to head for better loading) -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <!-- Kimi-style Theme Toggle -->
+    <button class="theme-toggle" 
+            id="theme-toggle"
+            aria-label="{% if request.dark_mode %}Switch to light mode{% else %}Switch to dark mode{% endif %}"
+            onclick="toggleTheme()">
+        <span class="theme-icon-light">🌙</span>
+        <span class="theme-icon-dark">☀️</span>
+    </button>
+
     <nav class="navbar">
         <a href="{% url 'accounts:homepage' %}" class="logo">Offshore Investment</a>
         <div class="nav-links">
-            <a href="{% url 'accounts:homepage' %}">Home</a>
+            <a href="{% url 'accounts:homepage' %}" class="nav-link">Home</a>
             {% if user.is_authenticated %}
-                <a href="#">Dashboard</a>
-                <a href="#">Portfolio</a>
-                <a href="{% url 'accounts:logout' %}">Logout ({{ user.username }})</a>
+                <a href="#" class="nav-link" onclick="showComingSoon('dashboard')">Dashboard</a>
+                <a href="#" class="nav-link" onclick="showComingSoon('portfolio')">Portfolio</a>
+                <a href="{% url 'accounts:logout' %}" class="nav-link">Logout ({{ user.username }})</a>
             {% else %}
-                <a href="{% url 'accounts:login' %}">Login</a>
-                <a href="{% url 'accounts:signup' %}">Sign Up</a>
+                <a href="{% url 'accounts:login' %}" class="nav-link">Login</a>
+                <a href="{% url 'accounts:signup' %}" class="nav-link">Sign Up</a>
             {% endif %}
         </div>
     </nav>
@@ -42,5 +63,99 @@
         <p>&copy; 2026 Offshore Investment. All rights reserved.</p>
         <p>Invest in Bitcoin, Gold, Stocks and more!</p>
     </footer>
+
+    <!-- Theme and Utility JavaScript -->
+    <script>
+        // Theme Toggle Functions
+        (function() {
+            const colorMode = document.documentElement.getAttribute('color-mode');
+            updateThemeIcons(colorMode);
+        })();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentMode = html.getAttribute('color-mode');
+            const newMode = currentMode === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('color-mode', newMode);
+            updateThemeIcons(newMode);
+            saveThemePreference(newMode === 'dark');
+        }
+
+        function updateThemeIcons(mode) {
+            const toggle = document.getElementById('theme-toggle');
+            if (mode === 'dark') {
+                toggle.setAttribute('aria-label', 'Switch to light mode');
+                toggle.classList.add('dark-active');
+            } else {
+                toggle.setAttribute('aria-label', 'Switch to dark mode');
+                toggle.classList.remove('dark-active');
+            }
+        }
+
+        function saveThemePreference(darkMode) {
+            fetch('/accounts/toggle-theme/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dark_mode: darkMode })
+            }).catch(err => console.log('Theme preference saved locally only'));
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Coming Soon Function for non-working buttons
+        function showComingSoon(feature) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            const phaseMap = {
+                'dashboard': '4',
+                'portfolio': '4',
+                'crypto': '3',
+                'gold': '3',
+                'stocks': '3',
+                'bonds': '3',
+                'invest': '3'
+            };
+            const phase = phaseMap[feature] || '3';
+            toast.innerHTML = `
+                <i class="fas fa-clock"></i>
+                <span>${feature.charAt(0).toUpperCase() + feature.slice(1)} feature is coming soon in Phase ${phase}!</span>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Add loading state to buttons when clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (this.getAttribute('onclick') && this.getAttribute('onclick').includes('showComingSoon')) {
+                        return;
+                    }
+                    if (this.href && !this.href.includes('#')) {
+                        this.classList.add('btn-loading');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

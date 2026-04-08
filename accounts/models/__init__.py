@@ -1,5 +1,5 @@
 from .user import UserProfile
-#from .kyc import KYC
+from .kyc import KYC, KYCDocument, KYCFailedAttempt
 #from .portfolio import Portfolio
 from .metadata import UserMetadata
 from .managers import UserProfileManager
@@ -14,6 +14,8 @@ from .metadata import UserMetadata
 __all__ = [
     'UserProfile',
     'KYC',
+    'KYCDocument'
+    'KYCFailedAttempt',
     'UserProfileManager',
     'UserMetadata',
     'Portfolio',

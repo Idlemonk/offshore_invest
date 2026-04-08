@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #3b82f6; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9fafb; }
+        .button { display: inline-block; background: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Offshore Investment</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{ user.username }},</h2>
+            <p>Thank you for depositing funds with Offshore Investment!</p>
+            <p>To have <strong>unlimited access</strong> to your funds and start investing, please complete your KYC verification.</p>
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="{{ site_url }}{% url 'accounts:kyc_wizard' %}" class="button">Complete KYC Now</a>
+            </p>
+            <p><strong>Important:</strong> Without KYC verification, you cannot:</p>
+            <ul>
+                <li>Place investment orders</li>
+                <li>Withdraw your funds</li>
+            </ul>
+            <p>If you have any questions, please contact our support team.</p>
+            <p>Best regards,<br>Offshore Investment Team</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 Offshore Investment. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

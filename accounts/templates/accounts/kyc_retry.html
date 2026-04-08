@@ -1,0 +1,50 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}KYC Verification - Retry{% endblock %}
+
+{% block content %}
+<div class="kyc-container">
+    <h1>Resubmit Your Documents</h1>
+    <p class="instruction">Your verification was rejected. Please upload new versions of the rejected documents.</p>
+
+    <div class="kyc-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% for doc in rejected_docs %}
+            <div class="retry-section">
+                <h3>{{ doc.get_document_type_display }}</h3>
+                <p class="rejection-note">Rejection reason: {{ doc.get_rejection_reason_display }}</p>
+                {% if doc.rejection_details %}
+                    <p class="rejection-details">{{ doc.rejection_details }}</p>
+                {% endif %}
+                
+                <div class="upload-area" data-doc="{{ doc.document_type }}">
+                    <input type="file" name="retry_{{ doc.document_type|lower }}" accept=".jpg,.jpeg,.png,.pdf">
+                    <button type="button" class="btn btn-secondary">Choose New File</button>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary">Resubmit for Review</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .retry-section {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .rejection-note {
+        color: var(--accent-danger);
+        margin: 0.5rem 0;
+    }
+    .rejection-details {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
